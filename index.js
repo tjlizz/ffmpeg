@@ -1,19 +1,25 @@
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const ffmpeg = require('fluent-ffmpeg');
-const path = require('path')
-ffmpeg.setFfmpegPath(ffmpegPath);
-const command = ffmpeg('a.mp4')
-    .save(path.join(__dirname, './aaa/aaa-%03d.ts'))
-   
-    .outputOptions([
-        '-y',
-        '-vcodec copy',
-        '-acodec copy',
-        '-map 0',
-        '-f segment',
-        `-segment_list ${path.join(__dirname, './aaa/aaa.m3u8')}`,
-        '-segment_time 10']
-    ).on('proce')
-    
-    run()
+const { app, BrowserWindow } = require('electron')
+const { ipcMain } = require('electron')
+const ffmpeg = require('./tool')
+function createWindow() {
+    // 创建浏览器窗口
+    let win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
 
+    // 加载index.html文件
+    win.loadFile('index.html')
+}
+ipcMain.on('video', (event, arg) => {
+    ffmpeg.ffmpeg(arg.videoPath, arg.savePath, 'aaaa')
+})
+
+ipcMain.on('synchronous-message', (event, arg) => {
+    console.log(arg) // prints "ping"
+    event.returnValue = 'pong'
+})
+app.on('ready', createWindow)

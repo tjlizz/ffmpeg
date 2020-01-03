@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button onclick="selectVideo()">选择视频</button>
+    <button onclick="selectPath()">选择位置</button>
+    <button onclick="create()">生成</button>
+</body>
+<script>
+    const { dialog } = require('electron').remote
+    const { ipcRenderer } = require('electron')
+    console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+    let video = {}
+    function selectVideo() {
+        console.log(dialog)
+        dialog.showOpenDialog({
+            filters: [
+                { name: 'Movies', extensions: ['mkv', 'avi', 'mp4'] },
+
+            ]
+
+        }).then(data => {
+            console.log(data.filePaths)
+            video['videoPath'] = data.filePaths[0]
+        })
+        ipcRenderer.send('selectVideo', 'ping')
+        ipcRenderer.on('videoRes', (event, arg) => {
+            console.log(arg) // prints "pong"
+        })
+    }
+    function selectPath() {
+        let a = dialog.showOpenDialogSync({
+            properties: ['openFile', 'openDirectory']
+        })
+        video['savePath'] = a[0]
+        console.log(a)
+    }
+    function create() {
+        ipcRenderer.send('video', video)
+    }
+    ipcRenderer.on('asynchronous-reply', (event, arg) => {
+        console.log(arg) // prints "pong"
+    })
+
+
+</script>
+
+</html>
