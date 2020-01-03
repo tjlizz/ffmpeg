@@ -15,7 +15,7 @@ module.exports = {
                 '-map 0',
                 '-f segment',
                 `-segment_list ${savePath + '\\' + fileName + '.m3u8'}`,
-                '-segment_time 1']
+                '-segment_time 5']
             )
             
             .save(savePath +'\\'+ `${fileName + '-%03d.ts'}`)
