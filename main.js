@@ -5,7 +5,6 @@ console.log(ffmpegPath)
 ffmpeg.setFfmpegPath(ffmpegPath);
 var vf = 'movie= aa.png[logo];[in][logo]overlay=10:10[out]';
 const command = ffmpeg('a.mp4')
-.save(path.join(__dirname, './aaa/%03d.m3u8'))
 .addOptions([
     '-vcodec libx264',
     '-acodec aac',
@@ -17,7 +16,7 @@ const command = ffmpeg('a.mp4')
     '-hls_time 10',
     '-hls_list_size 0',
     '-f hls',
-])
+]) .save(path.join(__dirname, './aaa/aaaaaa.m3u8'))
 .addOption('-vf', vf)
  .run()
 
